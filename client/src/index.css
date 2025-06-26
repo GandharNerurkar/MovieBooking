@@ -4,7 +4,7 @@
 @import "tailwindcss";
 
 @theme{
-  --color-primary: #F84565
+  --color-primary: #F84565;
   --color-primary-dull: #D63854
 }
 
