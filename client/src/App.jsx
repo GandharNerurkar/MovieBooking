@@ -6,14 +6,14 @@ import MovieDetails from "./pages/MovieDetails";
 import SeatLayout from "./pages/SeatLayout";
 import MyBookings from "./pages/MyBookings";
 import Favorite from "./pages/Favorite";
-import { Toster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import Footer from "./components/Footer";
 
 const App = () => {
   const isAdminRoute = useLocation().pathname.startsWith("/admin");
   return (
     <>
-      <Toster />
+      <Toaster />
       {!isAdminRoute && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
@@ -24,7 +24,7 @@ const App = () => {
         <Route path="/favorite" element={<Favorite />} />
       </Routes>
       {!isAdminRoute && <Footer />}
-      <Footer />
+
     </>
   );
 };
