@@ -30,7 +30,7 @@ max-md:text-lg z-50 flex flex-col md:flex-row items-center max-md:justify-center
 
         <Link
           onClick={() => {
-            scrollTo(0, 0), setIsOpen(false);
+            scrollTo(0, 0); setIsOpen(false);
           }}
           to="/"
         >
@@ -38,7 +38,7 @@ max-md:text-lg z-50 flex flex-col md:flex-row items-center max-md:justify-center
         </Link>
         <Link
           onClick={() => {
-            scrollTo(0, 0), setIsOpen(false);
+            scrollTo(0, 0); setIsOpen(false);
           }}
           to="/movies"
         >
@@ -46,7 +46,7 @@ max-md:text-lg z-50 flex flex-col md:flex-row items-center max-md:justify-center
         </Link>
         <Link
           onClick={() => {
-            scrollTo(0, 0), setIsOpen(false);
+            scrollTo(0, 0); setIsOpen(false);
           }}
           to="/"
         >
@@ -54,7 +54,7 @@ max-md:text-lg z-50 flex flex-col md:flex-row items-center max-md:justify-center
         </Link>
         <Link
           onClick={() => {
-            scrollTo(0, 0), setIsOpen(false);
+            scrollTo(0, 0); setIsOpen(false);
           }}
           to="/"
         >
@@ -62,7 +62,7 @@ max-md:text-lg z-50 flex flex-col md:flex-row items-center max-md:justify-center
         </Link>
         <Link
           onClick={() => {
-            scrollTo(0, 0), setIsOpen(false);
+            scrollTo(0, 0); setIsOpen(false);
           }}
           to="/favorites"
         >
