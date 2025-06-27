@@ -10,6 +10,13 @@ import lilo from './lilo.jpg'
 import minecraft from './MinecraftMovie.jpg'
 import mission from './MissionImpossible.jpg'
 import dawn from './untilDawn.jpg'
+import poster1 from './poster1.jpg'
+import poster2 from './poster2.jpg'
+import poster3 from './poster3.jpg'
+import poster4 from './poster4.jpg'
+import poster5 from './poster5.jpg'
+import poster6 from './poster6.jpg'
+import poster7 from './poster7.jpg'
 
 export const assets = {
     logo,
@@ -65,7 +72,7 @@ export const dummyShowsData = [
         "id": 324544,
         "title": "In the Lost Lands",
         "overview": "A queen sends the powerful and feared sorceress Gray Alys to the ghostly wilderness of the Lost Lands in search of a magical power, where she and her guide, the drifter Boyce, must outwit and outfight both man and demon.",
-        "poster_path": "https://image.tmdb.org/t/p/original/dDlfjR7gllmr8HTeN6rfrYhTdwX.jpg",
+        "poster_path": poster1,
         // "backdrop_path": "https://image.tmdb.org/t/p/original/op3qmNhvwEvyT7UFyPbIfQmKriB.jpg",
         "backdrop_path": lostIsland,
         "genres": [
@@ -86,7 +93,7 @@ export const dummyShowsData = [
         "id": 1232546,
         "title": "Until Dawn",
         "overview": "One year after her sister Melanie mysteriously disappeared, Clover and her friends head into the remote valley where she vanished in search of answers. Exploring an abandoned visitor center, they find themselves stalked by a masked killer and horrifically murdered one by one...only to wake up and find themselves back at the beginning of the same evening.",
-        "poster_path": "https://image.tmdb.org/t/p/original/juA4IWO52Fecx8lhAsxmDgy3M3.jpg",
+        "poster_path": poster2,
         // "backdrop_path": "https://image.tmdb.org/t/p/original/icFWIk1KfkWLZnugZAJEDauNZ94.jpg",
         "backdrop_path": dawn,
         "genres": [
@@ -106,7 +113,7 @@ export const dummyShowsData = [
         "id": 552524,
         "title": "Lilo & Stitch",
         "overview": "The wildly funny and touching story of a lonely Hawaiian girl and the fugitive alien who helps to mend her broken family.",
-        "poster_path": "https://image.tmdb.org/t/p/original/mKKqV23MQ0uakJS8OCE2TfV5jNS.jpg",
+        "poster_path": poster3,
         // "backdrop_path": "https://image.tmdb.org/t/p/original/7Zx3wDG5bBtcfk8lcnCWDOLM4Y4.jpg",
         "backdrop_path": lilo,
         "genres": [
@@ -127,7 +134,7 @@ export const dummyShowsData = [
         "id": 668489,
         "title": "Havoc",
         "overview": "When a drug heist swerves lethally out of control, a jaded cop fights his way through a corrupt city's criminal underworld to save a politician's son.",
-        "poster_path": "https://image.tmdb.org/t/p/original/ubP2OsF3GlfqYPvXyLw9d78djGX.jpg",
+        "poster_path": poster4,
         // "backdrop_path": "https://image.tmdb.org/t/p/original/65MVgDa6YjSdqzh7YOA04mYkioo.jpg",
         "backdrop_path": havoc,
         "genres": [
@@ -148,7 +155,7 @@ export const dummyShowsData = [
         "id": 950387,
         "title": "A Minecraft Movie",
         "overview": "Four misfits find themselves struggling with ordinary problems when they are suddenly pulled through a mysterious portal into the Overworld: a bizarre, cubic wonderland that thrives on imagination. To get back home, they'll have to master this world while embarking on a magical quest with an unexpected, expert crafter, Steve.",
-        "poster_path": "https://image.tmdb.org/t/p/original/yFHHfHcUgGAxziP1C3lLt0q2T4s.jpg",
+        "poster_path": poster5,
         // "backdrop_path": "https://image.tmdb.org/t/p/original/2Nti3gYAX513wvhp8IiLL6ZDyOm.jpg",
         "backdrop_path": minecraft,
         "genres": [
@@ -170,7 +177,7 @@ export const dummyShowsData = [
         "id": 575265,
         "title": "Mission: Impossible - The Final Reckoning",
         "overview": "Ethan Hunt and team continue their search for the terrifying AI known as the Entity — which has infiltrated intelligence networks all over the globe — with the world's governments and a mysterious ghost from Hunt's past on their trail. Joined by new allies and armed with the means to shut the Entity down for good, Hunt is in a race against time to prevent the world as we know it from changing forever.",
-        "poster_path": "https://image.tmdb.org/t/p/original/z53D72EAOxGRqdr7KXXWp9dJiDe.jpg",
+        "poster_path": poster6,
         // "backdrop_path": "https://image.tmdb.org/t/p/original/1p5aI299YBnqrEEvVGJERk2MXXb.jpg",
         "backdrop_path": mission,
         "genres": [
@@ -191,8 +198,8 @@ export const dummyShowsData = [
         "id": 986056,
         "title": "Thunderbolts*",
         "overview": "After finding themselves ensnared in a death trap, seven disillusioned castoffs must embark on a dangerous mission that will force them to confront the darkest corners of their pasts.",
-        "poster_path": "https://image.tmdb.org/t/p/original/m9EtP1Yrzv6v7dMaC9mRaGhd1um.jpg",
-        "backdrop_path": "https://image.tmdb.org/t/p/original/rthMuZfFv4fqEU4JVbgSW9wQ8rs.jpg",
+        "poster_path": poster7,
+        "backdrop_path": poster7,
         "genres": [
             { "id": 28, "name": "Action" },
             { "id": 878, "name": "Science Fiction" },
