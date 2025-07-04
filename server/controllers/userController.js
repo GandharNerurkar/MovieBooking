@@ -36,7 +36,7 @@ export const updateFavorite = async(req, res)=> {
     }
 }
 
-export const getFavourites = async (res, req)=>{
+export const getFavourites = async (req, res)=>{
     try{
         const user = await clerkClient.users.getUser(req.auth().userId)
         const favorites = user.privateMetadata.favorites;
