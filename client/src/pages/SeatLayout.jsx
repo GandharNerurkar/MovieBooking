@@ -6,6 +6,7 @@ import { ArrowRight, ArrowRightIcon, ClockIcon } from "lucide-react";
 import isoTimeFormat from "../lib/isoTimeFormat";
 import BlurCircle from "../components/BlurCircle";
 import toast from "react-hot-toast";
+import { useAppContext } from "../context/AppContext";
 
 const SeatLayout = () => {
   const groupRows = [["A", "B"], ["C", 'D'], ["E", "F"], ["G", "H"], ["I", "J"]];
@@ -13,16 +14,18 @@ const SeatLayout = () => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
   const [show, setShow] = useState(null);
+  const [occupiedSeats, setOccupiedSeats] = useState([]);
 
   const navigate = useNavigate();
+  const {axios, getToken, user} = useAppContext();
 
   const getShow = async () => {
-    const show = dummyShowsData.find((show) => show._id === id);
-    if (show) {
-      setShow({
-        movie: show,
-        dateTime: dummyDateTimeData,
-      });
+    try{
+      const {data} = await axios.get(`/api/show/${id}`);
+      if(data.success){ 
+        setShow(data);}
+    }catch (error) {
+      console.log("Error Fetching Show:", error);
     }
   };
 
@@ -33,6 +36,9 @@ const SeatLayout = () => {
     if(!selectedSeats.includes(seatId) && selectedSeats.length > 4){
       return toast("You can only select up to 5 seats");
     }
+    if(occupiedSeats.includes(seatId)){
+      return toast.error("This seat is already occupied.");
+    }
     setSelectedSeats(prev => prev.includes(seatId)? prev.filter(seat => seat !== seatId) : [...prev, seatId]);
   }
 
@@ -41,13 +47,58 @@ const SeatLayout = () => {
       <div className="flex flex-wrap items-center justify-center gap-2">
         {Array.from({ length: count }, (_, i) => {
           const seatId = `${row}${i + 1}`;
-          return <button key={seatId} onClick={() => handleSeatClick(seatId)} className={`h-8 w-8 rounded border border-primary/60 cursor-pointer ${selectedSeats.includes(seatId) && "bg-primary text-white"}`}>
+          return <button key={seatId} onClick={() => handleSeatClick(seatId)} className={`h-8 w-8 rounded border border-primary/60 cursor-pointer 
+          ${selectedSeats.includes(seatId) && "bg-primary text-white"} ${occupiedSeats.includes(seatId) && "opacity-50 "}`}>
             {seatId}
           </button>;
         })}
       </div>
     </div>
   );
+
+    const getOccupiedSeats = async () => {
+    try {
+      const {data} = await axios.get(`/api/booking/seats/${selectedTime.showId}`);
+      if(data.success){
+        setOccupiedSeats(data.occupiedSeats);
+        console.log(data.occupiedSeats)
+      }else{
+        toast.error(data.message || "Failed to fetch occupied seats.");
+      }
+    }catch (error) {
+      console.log("Error Fetching Occupied Seats:", error);
+    }
+  }
+
+  const bookTickets = async () => {
+    try{
+      if(!user)
+        return toast.error("Please sign in to book tickets.");
+      if(!selectedTime || !selectedSeats.length) return toast.error("Please select a time and seats to book.");
+      const {data} = await axios.post('api/booking/create', {
+        showId: selectedTime.showId,
+        selectedSeats
+      }, {
+        headers: {Authorization: `Bearer ${await getToken()}`}
+      })
+      if(data.success){
+        toast.success("Tickets booked successfully!");
+        navigate('/my-bookings');
+      }else{
+        toast.error(data.message || "Failed to book tickets.");
+        console.error("Booking Error:", data);
+      }
+    }catch (error) {
+      console.log("Error Booking Tickets:", error);
+      toast.error("Failed to book tickets.");
+    }
+  }
+
+  useEffect(() => {
+    if(selectedTime){
+      getOccupiedSeats()
+    }
+  }, [selectedTime])
 
   useEffect(() => {
     getShow();
@@ -96,7 +147,7 @@ const SeatLayout = () => {
 
 
         </div>
-        <button onClick={()=>navigate('/my-bookings')} className="flex items-center gap-1 mt-20 px-10 py-3 text-sm bg-primary hover:bg-primary-dull transition rounded-full font-medium cursor-pointer active:scale-95">
+        <button onClick={bookTickets} className="flex items-center gap-1 mt-20 px-10 py-3 text-sm bg-primary hover:bg-primary-dull transition rounded-full font-medium cursor-pointer active:scale-95">
           Proceed to Checkout
           <ArrowRightIcon strokeWidth={3} className="h-4 w-4"/>
         </button>

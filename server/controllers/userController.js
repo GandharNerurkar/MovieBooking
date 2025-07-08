@@ -5,8 +5,8 @@ import Movie from "../models/Movie.js";
 export const getUserBookings = async(req, res)=> {
     try{
         const user = req.auth().userId;
-        const booking = await Booking.find({user}).populate({path: 'show', populate: {path: 'movie'}}).sort({cratedAt: -1})
-        res.json({success: true, booking})
+        const booking = await Booking.find({user}).populate({path: 'show', populate: {path: 'movie'}}).sort({createdAt: -1})
+        res.json({success: true, bookings: booking})
     }catch(error){
         console.log(error.message)
         res.json({success: false, message: error.message})
