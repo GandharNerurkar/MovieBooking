@@ -1,3 +1,4 @@
+import sendEmail from "../config/nodeMailer.js";
 import Booking from "../models/Booking.js";
 import Show from "../models/Show.js";
 import User from "../models/User.js";
@@ -74,7 +75,6 @@ const releaseSeatsAndDeleteBooking = inngest.createFunction(
     }
 )
 
-// Send email when user book show
 const sendBookingConformationEmail = inngest.createFunction({
     id: 'send-booking-conformation-email'},
     {event: "app/show.booked"},
@@ -104,4 +104,4 @@ const sendBookingConformationEmail = inngest.createFunction({
 
 
 
-export const functions = [syncUserCreation, syncUserDeletion, syncUserUpdation, releaseSeatsAndDeleteBooking];
+export const functions = [syncUserCreation, syncUserDeletion, syncUserUpdation, releaseSeatsAndDeleteBooking, sendBookingConformationEmail];

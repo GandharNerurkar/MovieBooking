@@ -63,6 +63,12 @@ export const stripeWebhooks = async (request, response) => {
         })
 
 
+        //Send confirmation email
+        await inngest.send({
+          name: 'app/show.booked',
+          data: {bookingId}
+        })
+
         if (!result) {
           console.error(
             " Booking update failed. No booking found with ID:",
