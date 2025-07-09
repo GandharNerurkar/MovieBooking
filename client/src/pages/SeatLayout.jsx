@@ -85,7 +85,7 @@ const SeatLayout = () => {
       if(data.success){
         // toast.success("Tickets booked successfully!");
         // navigate('/my-bookings');
-        // window.location.href = data.url; // Redirect to Stripe checkout
+        window.location.href = data.url; // Redirect to Stripe checkout
       }else{
         toast.error(data.message || "Failed to book tickets.");
         console.error("Booking Error:", data);
