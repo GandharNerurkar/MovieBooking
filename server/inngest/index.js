@@ -3,6 +3,7 @@ import Booking from "../models/Booking.js";
 import Show from "../models/Show.js";
 import User from "../models/User.js";
 import { Inngest } from "inngest";
+import sendEmail from "./nodeMailer.js";
 
 // Create a client to send and receive events
 export const inngest = new Inngest({ id: "movie-booking" });
@@ -74,7 +75,6 @@ const releaseSeatsAndDeleteBooking = inngest.createFunction(
     }
 )
 
-// Send email when user book show =
 const sendBookingConformationEmail = inngest.createFunction({
     id: 'send-booking-conformation-email'},
     {event: "app/show.booked"},
@@ -100,6 +100,7 @@ const sendBookingConformationEmail = inngest.createFunction({
         })
     }
 )
+
 
 
 
