@@ -1,5 +1,6 @@
 import stripe from "stripe";
 import Booking from "../models/Booking.js";
+import { inngest } from "../inngest/index.js";
 
 export const stripeWebhooks = async (request, response) => {
   console.log("test");
@@ -54,6 +55,13 @@ export const stripeWebhooks = async (request, response) => {
           isPaid: true,
           paymentLink: "",
         });
+        
+
+ await inngest.send({
+          name: 'app/show.booked',
+          data: {bookingId}
+        })
+
 
         if (!result) {
           console.error(
