@@ -99,7 +99,7 @@ export const getShow = async (req, res) => {
     });
     const movie = await Movie.findById(movieId);
     console.log("movieId:", movieId);
-    console.log("movie:", movie);
+    // console.log("movie:", movie);
     const dateTime = {};
     shows.forEach((show) => {
       const date = show.showDateTime.toISOString().split("T")[0];

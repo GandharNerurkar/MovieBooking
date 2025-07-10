@@ -19,7 +19,9 @@
     "dotenv": "^17.0.0",
     "express": "^5.1.0",
     "inngest": "^3.39.2",
+    "mailer": "^0.6.7",
     "mongoose": "^8.16.1",
+    "node": "^24.4.0",
     "nodemailer": "^7.0.5",
     "stripe": "^18.3.0",
     "svix": "^1.69.0"
