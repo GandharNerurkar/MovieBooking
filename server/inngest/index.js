@@ -1,3 +1,4 @@
+import { set } from "mongoose";
 import sendEmail from "../config/nodeMailer.js";
 import Booking from "../models/Booking.js";
 import Show from "../models/Show.js";
@@ -104,7 +105,7 @@ const sendBookingConformationEmail = inngest.createFunction(
       //       <p>Enjoy th show!! 🍿</p>
       //       <p>Thanks for booking with us! <br/> - QuickShow Team - </p>
       //       </div>`,
-      body: `<body style="font-family: Arial, sans-serif; background-color: #fff; padding: 20px; color: #000;">
+      body: `<div style="font-family: Arial, sans-serif; background-color: #fff; padding: 20px; color: #000;">
   <div style="max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05); padding: 30px;">
     <h2 style="color: #D63854;">Hi ${booking.user.name},</h2>
     <p style="font-size: 16px; color: #000;">
@@ -122,10 +123,119 @@ const sendBookingConformationEmail = inngest.createFunction(
       <span style="color: #F84565;"><strong>- QuickShow Team -</strong></span>
     </p>
   </div>
-</body>`
+</div>`
     });
   }
 );
+
+//Inngest function to add reminders
+const sendShowReminders = inngest.createFunction(
+  {id: "send-show-reminders"},
+  {cron: "0 */8 * * *"},
+  async ({step}) => {
+    const now = new Date();
+    const in8Hours = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+    const windowStart = new Date(in8Hours.getTime() - 10 * 60 * 1000);
+
+    const reminderTasks = await step.run("prepare-reminder-tasks", async ()=> {
+      const shows = await Show.find({
+        showTime: {$gte: windowStart, $lte: in8Hours},
+      }).populate('movie');
+      const tasks = [];
+      for(const show of shows){
+        if(!show.movie || !show.occupiedSeats) continue;
+        const userIds = [...new set(Object.values(show.occupiedSeats))];
+        if(userIds.length === 0) continue;
+
+        const users = await User.find({_id: {userIds}}).select("name email");
+
+        for(const user of users){
+          tasks.push({
+            userEmail: user.email,
+            userName: user.name,
+            movieTitle: show.movie.title,
+            showTime: show.showTime,
+          })
+        }
+      }
+      return tasks
+    })
+    if(reminderTasks.length === 0){
+      return {sent: 0, message: "No reminders to send"}
+    }
+    //send reminder email
+    const results = await step.run('Send-all-reminders', async ()=>{
+      return await Promise.allSettled(
+        reminderTasks.map(task => sendEmail({
+          to: task.userEmail,
+          subject: `Reminder: Your movie "${task.movieTitle}" starts soon!`,
+          body: `<div style="font-family: Arial, sans-serif; background-color: #fff; padding: 20px; color: #000;">
+  <div style="max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05); padding: 30px;">
+    <h2 style="color: #D63854;">Hi ${task.UserName},</h2>
+    <p style="font-size: 16px; color: #000;">
+      This is a quick reminder that your movie <strong style="color: #F84565;">"${task.movieTitle}"</strong> is about to start soon!
+    </p>
+    <p style="font-size: 16px; color: #000;">
+      <strong style="color: #D63854;">Showtime:</strong>
+      ${new Date(task.showTime).toLocaleString("en-US", { timeZone: "Asia/Kolkata" })}
+    </p>
+    <p style="font-size: 16px; color: #000;">
+      Please arrive a few minutes early, grab your snacks, and enjoy the experience! 🎬🍿
+    </p>
+    <p style="font-size: 16px; color: #000;">
+      Wishing you a great time!<br/>
+      <span style="color: #F84565;"><strong>- QuickShow Team -</strong></span>
+    </p>
+  </div>
+</div>
+`
+        }))
+      )
+    })
+    const sent = results.filter(r => r.status === "fulfilled").length;
+
+    const failed = results.length - sent;
+
+    return {
+      sent, 
+      failed,
+      message: `Sent ${sent} reminder(s), ${failed} failed.`
+    }
+  }
+)
+
+const sentNewShowNotifications = inngest.createFunction(
+  {id: "sent-new-show-notifications"},
+  {event: "app/show.added"},
+  async ({event}) => {
+    const { movieTitle} = event.data;
+
+    const users = await User.find({})
+
+    for(const user of users){
+      const userEmail = user.email;
+      const userName = user.name;
+
+      const subject = `🎬 New Show Added: ${movieTitle}`;
+      const body = `<div style="font-family: Arial, sans-serif; padding: 20px;">
+      <h2>Hi ${userName},</h2>
+      <p>We've just added a new show to our library:</p>
+      <h3 style="color: #F84565;">"${movieTitle}"</h3>
+      <p>Visit out website</p>
+      <br/>
+      <p>Thanks, <br/>QuickShow Team</p>
+      </div>`;
+
+      await sendEmail({
+        to: userEmail,
+        subject,
+        body,
+      })
+    }
+    return {message: "Notification sent"}
+
+  }
+)
 
 export const functions = [
   syncUserCreation,
@@ -133,4 +243,6 @@ export const functions = [
   syncUserUpdation,
   releaseSeatsAndDeleteBooking,
   sendBookingConformationEmail,
+  sendShowReminders,
+  sentNewShowNotifications
 ];
