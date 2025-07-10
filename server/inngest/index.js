@@ -91,19 +91,38 @@ const sendBookingConformationEmail = inngest.createFunction(
     await sendEmail({
       to: booking.user.email,
       subject: `Payment Confirmation: "${booking.show.movie.title}" booked!`,
-      body: `<div style="font-family:Arial, sans-serif; line-height: 1.5;">
-            <h2>Hi ${booking.user.name},</h2>
-            <p>Your booking for <strong style="color: #F84565;">"${
-              booking.show.movie.title
-            }"</strong> is confirmed.</p>
-            <p>
-            <strong>Date:</strong> ${new Date(
-              booking.show.showDateTime
-            ).toLocaleDateString("en-US", { timeZone: "Asia/Kolkata" })}
-            </p>
-            <p>Enjoy th show!! 🍿</p>
-            <p>Thanks for booking with us! <br/> - QuickShow Team - </p>
-            </div>`,
+      // body: `<div style="font-family:Arial, sans-serif; line-height: 1.5;">
+      //       <h2>Hi ${booking.user.name},</h2>
+      //       <p>Your booking for <strong style="color: #F84565;">"${
+      //         booking.show.movie.title
+      //       }"</strong> is confirmed.</p>
+      //       <p>
+      //       <strong>Date:</strong> ${new Date(
+      //         booking.show.showDateTime
+      //       ).toLocaleDateString("en-US", { timeZone: "Asia/Kolkata" })}
+      //       </p>
+      //       <p>Enjoy th show!! 🍿</p>
+      //       <p>Thanks for booking with us! <br/> - QuickShow Team - </p>
+      //       </div>`,
+      body: `<body style="font-family: Arial, sans-serif; background-color: #fff; padding: 20px; color: #000;">
+  <div style="max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05); padding: 30px;">
+    <h2 style="color: #D63854;">Hi ${booking.user.name},</h2>
+    <p style="font-size: 16px; color: #000;">
+      Your booking for <strong style="color: #F84565;">"${booking.show.movie.title}"</strong> is confirmed.
+    </p>
+    <p style="font-size: 16px; color: #000;">
+      <strong style="color: #D63854;">Date:</strong>
+      ${new Date(booking.show.showDateTime).toLocaleDateString("en-US", { timeZone: "Asia/Kolkata" })}
+    </p>
+    <p style="font-size: 16px; color: #000;">
+      Enjoy the show!! <span style="font-size: 20px;">🍿</span>
+    </p>
+    <p style="font-size: 16px; color: #000;">
+      Thanks for booking with us!<br/>
+      <span style="color: #F84565;"><strong>- QuickShow Team -</strong></span>
+    </p>
+  </div>
+</body>`
     });
   }
 );
