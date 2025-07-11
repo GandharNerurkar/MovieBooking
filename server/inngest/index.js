@@ -92,19 +92,6 @@ const sendBookingConformationEmail = inngest.createFunction(
     await sendEmail({
       to: booking.user.email,
       subject: `Payment Confirmation: "${booking.show.movie.title}" booked!`,
-      // body: `<div style="font-family:Arial, sans-serif; line-height: 1.5;">
-      //       <h2>Hi ${booking.user.name},</h2>
-      //       <p>Your booking for <strong style="color: #F84565;">"${
-      //         booking.show.movie.title
-      //       }"</strong> is confirmed.</p>
-      //       <p>
-      //       <strong>Date:</strong> ${new Date(
-      //         booking.show.showDateTime
-      //       ).toLocaleDateString("en-US", { timeZone: "Asia/Kolkata" })}
-      //       </p>
-      //       <p>Enjoy th show!! 🍿</p>
-      //       <p>Thanks for booking with us! <br/> - QuickShow Team - </p>
-      //       </div>`,
       body: `<div style="font-family: Arial, sans-serif; background-color: #fff; padding: 20px; color: #000;">
   <div style="max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05); padding: 30px;">
     <h2 style="color: #D63854;">Hi ${booking.user.name},</h2>
@@ -147,7 +134,7 @@ const sendShowReminders = inngest.createFunction(
         const userIds = [...new set(Object.values(show.occupiedSeats))];
         if(userIds.length === 0) continue;
 
-        const users = await User.find({_id: {userIds}}).select("name email");
+        const users = await User.find({_id: {$in: userIds}}).select("name email");
 
         for(const user of users){
           tasks.push({
@@ -216,6 +203,8 @@ const sentNewShowNotifications = inngest.createFunction(
       const userEmail = user.email;
       const userName = user.name;
 
+      console.log(`📧 Sending email to: ${userEmail}`);
+
       const subject = `🎬 New Show Added: ${movieTitle}`;
       const body = `<div style="font-family: Arial, sans-serif; padding: 20px;">
       <h2>Hi ${userName},</h2>
@@ -231,8 +220,9 @@ const sentNewShowNotifications = inngest.createFunction(
         subject,
         body,
       })
+      console.log(`✅ Email send result for ${userEmail}:`, res.messageId);
     }
-    return {message: "Notification sent"}
+    return {message: "Notification sent."}
 
   }
 )
