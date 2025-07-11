@@ -191,41 +191,79 @@ const sendShowReminders = inngest.createFunction(
   }
 )
 
+// const sentNewShowNotifications = inngest.createFunction(
+//   {id: "sent-new-show-notifications"},
+//   {event: "app/show.added"},
+//   async ({event}) => {
+//     const { movieTitle} = event.data;
+
+//     const users = await User.find({})
+
+//     for(const user of users){
+//       const userEmail = user.email;
+//       const userName = user.name;
+
+//       console.log(`📧 Sending email to: ${userEmail}`);
+
+//       const subject = `🎬 New Show Added: ${movieTitle}`;
+//       const body = `<div style="font-family: Arial, sans-serif; padding: 20px;">
+//       <h2>Hi ${userName},</h2>
+//       <p>We've just added a new show to our library:</p>
+//       <h3 style="color: #F84565;">"${movieTitle}"</h3>
+//       <p>Visit out website</p>
+//       <br/>
+//       <p>Thanks, <br/>QuickShow Team</p>
+//       </div>`;
+
+//       const res = await sendEmail({
+//         to: userEmail,
+//         subject,
+//         body,
+//       })
+//       console.log(`✅ Email send result for ${userEmail}:`, res.messageId);
+//     }
+//     return {message: "Notification sent."}
+
+//   }
+// )
+
 const sentNewShowNotifications = inngest.createFunction(
-  {id: "sent-new-show-notifications"},
-  {event: "app/show.added"},
-  async ({event}) => {
-    const { movieTitle} = event.data;
+  { id: "sent-new-show-notifications" },
+  { event: "app/show.added" },
+  async ({ event }) => {
+    const { movieTitle, movieId } = event.data;
 
-    const users = await User.find({})
+    const shows = await Show.find({ movie: movieId });
 
-    for(const user of users){
-      const userEmail = user.email;
-      const userName = user.name;
+    // If notifications already sent for any show of this movie, exit early
+    if (shows.length > 0 && shows[0].notificationsSent) {
+      console.log("⚠️ Notifications already sent for this movie.");
+      return { message: "Already notified." };
+    }
 
-      console.log(`📧 Sending email to: ${userEmail}`);
-
+    const users = await User.find({});
+    for (const user of users) {
       const subject = `🎬 New Show Added: ${movieTitle}`;
       const body = `<div style="font-family: Arial, sans-serif; padding: 20px;">
-      <h2>Hi ${userName},</h2>
-      <p>We've just added a new show to our library:</p>
-      <h3 style="color: #F84565;">"${movieTitle}"</h3>
-      <p>Visit out website</p>
-      <br/>
-      <p>Thanks, <br/>QuickShow Team</p>
+        <h2>Hi ${user.name},</h2>
+        <p>We've just added a new show to our library:</p>
+        <h3 style="color: #F84565;">"${movieTitle}"</h3>
+        <p>Visit our website to book your seat!</p>
+        <br/>
+        <p>Thanks,<br/>QuickShow Team</p>
       </div>`;
 
-      await sendEmail({
-        to: userEmail,
-        subject,
-        body,
-      })
-      console.log(`✅ Email send result for ${userEmail}:`, res.messageId);
+      const res = await sendEmail({ to: user.email, subject, body });
+      console.log(`✅ Email sent to ${user.email}: ${res.messageId}`);
     }
-    return {message: "Notification sent."}
 
+    // ✅ Mark all shows of this movie as notified
+    await Show.updateMany({ movie: movieId }, { $set: { notificationsSent: true } });
+
+    return { message: "Notifications sent." };
   }
-)
+);
+
 
 export const functions = [
   syncUserCreation,

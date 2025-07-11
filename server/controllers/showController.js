@@ -73,8 +73,11 @@ export const addShow = async (req, res) => {
     //Trigger Innget Event
     await inngest.send({
       name: "app/show.added",
-      data: {movieTitle:movie.title}
-    })
+      data: {
+        movieTitle: movie.title,
+        movieId: movie._id.toString(), // or movieId
+      },
+    });
     res.json({ success: true, message: "Show Added successfully" });
   } catch (error) {
     console.log(error);
