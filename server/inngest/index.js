@@ -191,42 +191,6 @@ const sendShowReminders = inngest.createFunction(
   }
 )
 
-// const sentNewShowNotifications = inngest.createFunction(
-//   {id: "sent-new-show-notifications"},
-//   {event: "app/show.added"},
-//   async ({event}) => {
-//     const { movieTitle} = event.data;
-
-//     const users = await User.find({})
-
-//     for(const user of users){
-//       const userEmail = user.email;
-//       const userName = user.name;
-
-//       console.log(`📧 Sending email to: ${userEmail}`);
-
-//       const subject = `🎬 New Show Added: ${movieTitle}`;
-//       const body = `<div style="font-family: Arial, sans-serif; padding: 20px;">
-//       <h2>Hi ${userName},</h2>
-//       <p>We've just added a new show to our library:</p>
-//       <h3 style="color: #F84565;">"${movieTitle}"</h3>
-//       <p>Visit out website</p>
-//       <br/>
-//       <p>Thanks, <br/>QuickShow Team</p>
-//       </div>`;
-
-//       const res = await sendEmail({
-//         to: userEmail,
-//         subject,
-//         body,
-//       })
-//       console.log(`✅ Email send result for ${userEmail}:`, res.messageId);
-//     }
-//     return {message: "Notification sent."}
-
-//   }
-// )
-
 const sentNewShowNotifications = inngest.createFunction(
   { id: "sent-new-show-notifications" },
   { event: "app/show.added" },
